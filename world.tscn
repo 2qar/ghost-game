@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://player.gd" type="Script" id=1]
-[ext_resource path="res://ghost animation but pretty bow.png" type="Texture" id=2]
-[ext_resource path="res://animated_sprite.gd" type="Script" id=3]
+[ext_resource path="res://ghost_sprite.tscn" type="PackedScene" id=2]
+[ext_resource path="res://ghost.tscn" type="PackedScene" id=3]
 [ext_resource path="res://ghost_tiles.tres" type="TileSet" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
@@ -17,14 +17,7 @@ __meta__ = {
 "_edit_group_": true
 }
 
-[node name="sprite" type="Sprite" parent="player"]
-texture = ExtResource( 2 )
-hframes = 6
-script = ExtResource( 3 )
-
-[node name="animate" type="Timer" parent="player/sprite"]
-wait_time = 0.2
-autostart = true
+[node name="sprite" parent="player" instance=ExtResource( 2 )]
 
 [node name="collider" type="CollisionShape2D" parent="player"]
 shape = SubResource( 1 )
@@ -32,6 +25,9 @@ shape = SubResource( 1 )
 [node name="Camera2D" type="Camera2D" parent="player"]
 current = true
 zoom = Vector2( 0.2, 0.2 )
+drag_margin_h_enabled = false
+drag_margin_v_enabled = false
+smoothing_enabled = true
 
 [node name="left_down" type="RayCast2D" parent="player"]
 position = Vector2( -4, 0 )
@@ -43,9 +39,15 @@ position = Vector2( 4, 0 )
 enabled = true
 cast_to = Vector2( 0, 4.1 )
 
+[node name="talk_ray" type="RayCast2D" parent="player"]
+enabled = true
+cast_to = Vector2( 16, 0 )
+
+[node name="ghost" parent="." instance=ExtResource( 3 )]
+position = Vector2( 26, 3.87418 )
+
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = ExtResource( 4 )
 cell_size = Vector2( 8, 8 )
 format = 1
-tile_data = PoolIntArray( -3, 13, 0, 131070, 1, 0, 131071, 1, 0, 65536, 1, 0, 65537, 1, 0, 65538, 1, 0, 65539, 1, 0, 65540, 1, 0, 65541, 1, 0 )
-[connection signal="timeout" from="player/sprite/animate" to="player/sprite" method="_on_animate_timeout"]
+tile_data = PoolIntArray( -65537, 10, 0, -131072, 7, 0, -131071, 7, 0, -2, 10, 0, -1, 8, 0, 65534, 5, 0, 131070, 9, 0, 131071, 1, 0, 65536, 1, 0, 65537, 1, 0, 65538, 1, 0, 65539, 1, 0, 65540, 1, 0, 65541, 1, 0 )
