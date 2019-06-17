@@ -1,0 +1,51 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://player.gd" type="Script" id=1]
+[ext_resource path="res://ghost animation but pretty bow.png" type="Texture" id=2]
+[ext_resource path="res://animated_sprite.gd" type="Script" id=3]
+[ext_resource path="res://ghost_tiles.tres" type="TileSet" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 3.8, 3.8 )
+
+[node name="world" type="Node2D"]
+
+[node name="player" type="KinematicBody2D" parent="."]
+position = Vector2( 4, 4 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="sprite" type="Sprite" parent="player"]
+texture = ExtResource( 2 )
+hframes = 6
+script = ExtResource( 3 )
+
+[node name="animate" type="Timer" parent="player/sprite"]
+wait_time = 0.2
+autostart = true
+
+[node name="collider" type="CollisionShape2D" parent="player"]
+shape = SubResource( 1 )
+
+[node name="Camera2D" type="Camera2D" parent="player"]
+current = true
+zoom = Vector2( 0.2, 0.2 )
+
+[node name="left_down" type="RayCast2D" parent="player"]
+position = Vector2( -4, 0 )
+enabled = true
+cast_to = Vector2( 0, 4.1 )
+
+[node name="right_down" type="RayCast2D" parent="player"]
+position = Vector2( 4, 0 )
+enabled = true
+cast_to = Vector2( 0, 4.1 )
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource( 4 )
+cell_size = Vector2( 8, 8 )
+format = 1
+tile_data = PoolIntArray( -3, 13, 0, 131070, 1, 0, 131071, 1, 0, 65536, 1, 0, 65537, 1, 0, 65538, 1, 0, 65539, 1, 0, 65540, 1, 0, 65541, 1, 0 )
+[connection signal="timeout" from="player/sprite/animate" to="player/sprite" method="_on_animate_timeout"]
