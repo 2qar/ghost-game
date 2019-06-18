@@ -45,6 +45,8 @@ cast_to = Vector2( 16, 0 )
 
 [node name="ghost" parent="." instance=ExtResource( 3 )]
 position = Vector2( 26, 3.87418 )
+dialogue = "hey buddy
+:)"
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = ExtResource( 4 )

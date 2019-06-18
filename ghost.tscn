@@ -28,3 +28,6 @@ custom_fonts/font = ExtResource( 4 )
 text = "[Z]"
 align = 1
 valign = 1
+
+[node name="text_timer" type="Timer" parent="."]
+wait_time = 0.1

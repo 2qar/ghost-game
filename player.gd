@@ -4,6 +4,9 @@ export var SPEED := 30
 
 var movement := Vector2()
 var last_ghost : Object
+var talking : bool
+
+signal next_line
 
 func _ready():
 	pass # Replace with function body.
@@ -11,6 +14,14 @@ func _ready():
 func _process(delta):
 	if $talk_ray.is_colliding():
 		if last_ghost:
+			if Input.is_action_just_pressed("talk"):
+				if not talking:
+					talking = true
+					last_ghost.talk()
+				elif not last_ghost.talking:
+					emit_signal("next_line")
+			elif last_ghost.talking and Input.is_action_just_pressed("skip"):
+				last_ghost.skip = true
 			return
 		var collider = $talk_ray.get_collider()
 		if collider.has_method("toggle_text"):
@@ -22,7 +33,7 @@ func _process(delta):
 		last_ghost = null
 
 func _physics_process(delta):
-	if Input.is_action_pressed("left") or Input.is_action_pressed("right"):
+	if (Input.is_action_pressed("left") or Input.is_action_pressed("right")) and not talking:
 		if Input.is_action_pressed("left"):
 			if !$sprite.flip_h:
 				$sprite.flip_h = true
@@ -36,7 +47,7 @@ func _physics_process(delta):
 	else:
 		movement.x = 0
 	
-	if $left_down.is_colliding() or $right_down.is_colliding():
+	if ($left_down.is_colliding() or $right_down.is_colliding()) and not talking:
 		if Input.is_action_just_pressed("jump") and movement.y == 0:
 			movement.y = -100
 	else:
