@@ -24,6 +24,8 @@ config/icon="res://icon.png"
 window/size/width=640
 window/size/height=480
 window/size/resizable=false
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
 
 [input]
 
@@ -58,4 +60,5 @@ skip={
 quality/driver/driver_name="GLES2"
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
+environment/default_clear_color=Color( 0, 0.00784314, 1, 1 )
 environment/default_environment="res://default_env.tres"
