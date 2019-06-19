@@ -50,7 +50,7 @@ func _physics_process(delta):
 	if ($left_down.is_colliding() or $right_down.is_colliding()) and not talking:
 		if Input.is_action_just_pressed("jump") and movement.y == 0:
 			movement.y = -100
-	else:
+	if not is_on_floor():
 		if movement.y < 250:
 			movement.y += 3
 	
