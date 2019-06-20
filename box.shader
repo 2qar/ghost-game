@@ -21,7 +21,7 @@ void fragment() {
 	box[1].y = box[1].y / screen.y;
 	
 	if (UV.x > box[0].x && UV.y > box[0].y && UV.x < box[1].x && UV.y < box[1].y) {
-		discard;
+		COLOR = vec4(0.0);
 	} else {
 		COLOR = texture(TEXTURE, UV);
 	}

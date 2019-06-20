@@ -11,7 +11,19 @@ signal next_line
 func _ready():
 	pass # Replace with function body.
 
+func test_transition():
+	var tween : Tween = get_node("../../Tween")
+	var screen : ViewportContainer = get_node("../../../ghost")
+	tween.interpolate_property(screen.material, "shader_param/percent", 0.0, 1.0, 1.5, Tween.TRANS_SINE, Tween.EASE_OUT)
+	tween.start()
+	yield(tween, "tween_all_completed")
+	screen.visible = false
+	print("hide")
+
 func _process(delta):
+	if Input.is_action_just_pressed("ui_page_up"):
+		test_transition()
+
 	if $talk_ray.is_colliding():
 		if last_ghost:
 			if Input.is_action_just_pressed("talk"):

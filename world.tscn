@@ -1,18 +1,19 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://box.shader" type="Shader" id=1]
-[ext_resource path="res://player.gd" type="Script" id=2]
-[ext_resource path="res://ghost_sprite.tscn" type="PackedScene" id=3]
-[ext_resource path="res://ghost_tiles.tres" type="TileSet" id=4]
-[ext_resource path="res://ghost.tscn" type="PackedScene" id=5]
-[ext_resource path="res://HSlider.gd" type="Script" id=6]
+[ext_resource path="res://human.png" type="Texture" id=1]
+[ext_resource path="res://human.gd" type="Script" id=2]
+[ext_resource path="res://box.shader" type="Shader" id=3]
+[ext_resource path="res://player.gd" type="Script" id=4]
+[ext_resource path="res://ghost_sprite.tscn" type="PackedScene" id=5]
+[ext_resource path="res://ghost_tiles.tres" type="TileSet" id=6]
+[ext_resource path="res://ghost.tscn" type="PackedScene" id=7]
 
 [sub_resource type="ShaderMaterial" id=1]
-shader = ExtResource( 1 )
+shader = ExtResource( 3 )
 shader_param/percent = 0.0
 
 [sub_resource type="ShaderMaterial" id=2]
-shader = ExtResource( 1 )
+shader = ExtResource( 3 )
 shader_param/percent = 0.0
 
 [sub_resource type="RectangleShape2D" id=3]
@@ -20,12 +21,37 @@ extents = Vector2( 3.8, 3.8 )
 
 [node name="world" type="Control"]
 
-[node name="screen" type="ViewportContainer" parent="."]
+[node name="human" type="ViewportContainer" parent="."]
+editor/display_folded = true
+margin_right = 640.0
+margin_bottom = 480.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Viewport" type="Viewport" parent="human"]
+size = Vector2( 640, 480 )
+transparent_bg = true
+handle_input_locally = false
+usage = 1
+debug_draw = 3
+render_target_update_mode = 3
+audio_listener_enable_2d = true
+
+[node name="human" type="Sprite" parent="human/Viewport"]
+position = Vector2( 4, 4 )
+texture = ExtResource( 1 )
+script = ExtResource( 2 )
+
+[node name="ghost" type="ViewportContainer" parent="."]
 material = SubResource( 1 )
 margin_right = 640.0
-margin_bottom = 360.0
+margin_bottom = 480.0
+__meta__ = {
+"_edit_lock_": true
+}
 
-[node name="Viewport" type="Viewport" parent="screen"]
+[node name="Viewport" type="Viewport" parent="ghost"]
 size = Vector2( 640, 480 )
 handle_input_locally = false
 usage = 1
@@ -33,57 +59,49 @@ debug_draw = 3
 render_target_update_mode = 3
 audio_listener_enable_2d = true
 
-[node name="player" type="KinematicBody2D" parent="screen/Viewport"]
+[node name="player" type="KinematicBody2D" parent="ghost/Viewport"]
+editor/display_folded = true
 position = Vector2( 4, 4 )
-script = ExtResource( 2 )
+script = ExtResource( 4 )
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="sprite" parent="screen/Viewport/player" instance=ExtResource( 3 )]
+[node name="sprite" parent="ghost/Viewport/player" instance=ExtResource( 5 )]
 material = SubResource( 2 )
 
-[node name="collider" type="CollisionShape2D" parent="screen/Viewport/player"]
-visible = false
+[node name="collider" type="CollisionShape2D" parent="ghost/Viewport/player"]
 shape = SubResource( 3 )
 
-[node name="Camera2D" type="Camera2D" parent="screen/Viewport/player"]
-current = true
+[node name="Camera2D" type="Camera2D" parent="ghost/Viewport/player"]
 zoom = Vector2( 0.2, 0.2 )
 drag_margin_h_enabled = false
 drag_margin_v_enabled = false
 smoothing_enabled = true
 
-[node name="left_down" type="RayCast2D" parent="screen/Viewport/player"]
+[node name="left_down" type="RayCast2D" parent="ghost/Viewport/player"]
 position = Vector2( -4, 0 )
 enabled = true
 cast_to = Vector2( 0, 4.1 )
 
-[node name="right_down" type="RayCast2D" parent="screen/Viewport/player"]
+[node name="right_down" type="RayCast2D" parent="ghost/Viewport/player"]
 position = Vector2( 4, 0 )
 enabled = true
 cast_to = Vector2( 0, 4.1 )
 
-[node name="talk_ray" type="RayCast2D" parent="screen/Viewport/player"]
+[node name="talk_ray" type="RayCast2D" parent="ghost/Viewport/player"]
 enabled = true
 cast_to = Vector2( 16, 0 )
 
-[node name="TileMap" type="TileMap" parent="screen/Viewport"]
-tile_set = ExtResource( 4 )
+[node name="TileMap" type="TileMap" parent="ghost/Viewport"]
+tile_set = ExtResource( 6 )
 cell_size = Vector2( 8, 8 )
 format = 1
 tile_data = PoolIntArray( -65537, 10, 0, -131072, 7, 0, -131071, 7, 0, -2, 10, 0, -1, 8, 0, 65534, 5, 0, 131070, 9, 0, 131071, 1, 0, 65536, 1, 0, 65537, 1, 0, 65538, 1, 0, 65539, 1, 0, 65540, 1, 0, 65541, 1, 0 )
 
-[node name="ghost" parent="screen/Viewport" instance=ExtResource( 5 )]
-position = Vector2( 26, 3.87418 )
+[node name="ghost" parent="ghost/Viewport" instance=ExtResource( 7 )]
+position = Vector2( 44, 3.874 )
 dialogue = "hey buddy what's up
 :)"
 
-[node name="HSlider" type="HSlider" parent="screen"]
-margin_left = 100.0
-margin_right = 132.0
-margin_bottom = 16.0
-max_value = 1.0
-step = 0.01
-ticks_on_borders = true
-script = ExtResource( 6 )
+[node name="Tween" type="Tween" parent="ghost"]
