@@ -44,6 +44,13 @@ position = Vector2( 4, 4 )
 texture = ExtResource( 1 )
 script = ExtResource( 2 )
 
+[node name="Camera2D" type="Camera2D" parent="human/Viewport/human"]
+current = true
+zoom = Vector2( 0.2, 0.2 )
+drag_margin_h_enabled = false
+drag_margin_v_enabled = false
+smoothing_enabled = true
+
 [node name="TileMap" type="TileMap" parent="human/Viewport"]
 modulate = Color( 0.294118, 0.0784314, 0.0784314, 1 )
 tile_set = ExtResource( 3 )
