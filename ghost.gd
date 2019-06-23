@@ -17,6 +17,7 @@ func toggle_text():
 	$text.visible = text_visible
 
 func talk():
+	skip = false
 	var player = get_node("../player")
 	if player.position.x < position.x:
 		$sprite.flip_h = true
