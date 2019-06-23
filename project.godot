@@ -26,7 +26,6 @@ window/size/height=480
 window/size/resizable=false
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
-window/stretch/shrink=4.0
 
 [input]
 
