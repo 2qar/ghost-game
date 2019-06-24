@@ -20,6 +20,10 @@ func _on_swap_world(world_name: String, pos: Vector2, sprite_flipped: bool):
 		var player : KinematicBody2D = world.get_node("Viewport/player")
 		player.CURRENT = false
 		player.position = pos
+		var sprite = player.get_node("sprite")
+		if sprite.flip_h != sprite_flipped:
+			player.get_node("talk_ray").cast_to.x *= -1
+			sprite.flip_h = sprite_flipped
 		player.get_node("sprite").flip_h = sprite_flipped
 		player.get_node("Camera2D").smoothing_enabled = false
 
