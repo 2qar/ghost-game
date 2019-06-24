@@ -1,28 +1,25 @@
 extends KinematicBody2D
 
 export var SPEED := 30
+export var CURRENT : bool = false
+export var WORLD_NAME := ""
 
 var movement := Vector2()
 var last_ghost : Object
 var talking : bool
 
 signal next_line
+signal swap_world
 
 func _ready():
-	pass # Replace with function body.
-
-func test_transition():
-	var tween : Tween = get_node("../../Tween")
-	var screen : ViewportContainer = get_node("../../../ghost")
-	tween.interpolate_property(screen.material, "shader_param/percent", 0.0, 1.0, 1.5, Tween.TRANS_SINE, Tween.EASE_OUT)
-	tween.start()
-	yield(tween, "tween_all_completed")
-	screen.visible = false
-	print("hide")
+	add_to_group("player")
 
 func _process(delta):
+	if not CURRENT:
+		return
+
 	if Input.is_action_just_pressed("ui_page_up"):
-		test_transition()
+		emit_signal("swap_world", WORLD_NAME, position, $sprite.flip_h)
 
 	if $talk_ray.is_colliding():
 		if last_ghost:
@@ -45,6 +42,9 @@ func _process(delta):
 		last_ghost = null
 
 func _physics_process(delta):
+	if not CURRENT:
+		return
+
 	if (Input.is_action_pressed("left") or Input.is_action_pressed("right")) and not talking:
 		if Input.is_action_pressed("left"):
 			if !$sprite.flip_h:
