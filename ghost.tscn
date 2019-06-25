@@ -1,12 +1,17 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://ghost.gd" type="Script" id=1]
 [ext_resource path="res://ghost_sprite.tscn" type="PackedScene" id=2]
 [ext_resource path="res://friendly ghost.png" type="Texture" id=3]
 [ext_resource path="res://font.tres" type="DynamicFont" id=4]
+[ext_resource path="res://ghost.wav" type="AudioStream" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 4, 4 )
+
+[sub_resource type="AudioStreamRandomPitch" id=2]
+audio_stream = ExtResource( 5 )
+random_pitch = 1.0
 
 [node name="ghost" type="StaticBody2D"]
 script = ExtResource( 1 )
@@ -31,3 +36,8 @@ valign = 1
 
 [node name="text_timer" type="Timer" parent="."]
 wait_time = 0.1
+
+[node name="talk_sound" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource( 2 )
+volume_db = -5.361
+bus = "Ghost Talk"

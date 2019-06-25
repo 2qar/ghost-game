@@ -25,13 +25,16 @@ func talk():
 		$text.text = ""
 		talking = true
 		for letter in line:
+			$talk_sound.pitch_scale = rand_range(0.4, 1.2)
+			$talk_sound.play()
 			if skip:
 				$text.text = line
 				skip = false
 				break
 			$text.text += letter
-			$text_timer.start()
-			yield($text_timer, "timeout")
+			if letter != " ":
+				$text_timer.start()
+				yield($text_timer, "timeout")
 		talking = false
 		yield(player, "next_line")
 
