@@ -21,8 +21,14 @@ func _process(delta):
 	if Input.is_action_just_pressed("ui_page_up"):
 		emit_signal("swap_world", WORLD_NAME, position, $sprite.flip_h)
 
-	if $talk_ray.is_colliding():
+	var collider = $talk_ray.get_collider()
+	if collider:
 		if last_ghost:
+			if collider.has_method("toggle_text") and collider.name != last_ghost.name:
+				last_ghost.toggle_text()
+				last_ghost = collider
+				last_ghost.toggle_text()
+
 			if Input.is_action_just_pressed("talk"):
 				if not talking:
 					talking = true
@@ -31,9 +37,7 @@ func _process(delta):
 					emit_signal("next_line")
 			elif last_ghost.talking and Input.is_action_just_pressed("skip"):
 				last_ghost.skip = true
-			return
-		var collider = $talk_ray.get_collider()
-		if collider.has_method("toggle_text"):
+		elif collider.has_method("toggle_text"):
 			last_ghost = collider
 			if !collider.text_visible:
 				collider.toggle_text()
