@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/tiles.png-20e12ed313f9b52ca4483ea23302e684.stex"
+path="res://.import/ghost animation but pretty bow.png-a847a40686565c6a0bcb8d1cb8261f44.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tiles.png"
-dest_files=[ "res://.import/tiles.png-20e12ed313f9b52ca4483ea23302e684.stex" ]
+source_file="res://sprites/ghost animation but pretty bow.png"
+dest_files=[ "res://.import/ghost animation but pretty bow.png-a847a40686565c6a0bcb8d1cb8261f44.stex" ]
 
 [params]
 

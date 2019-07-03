@@ -16,8 +16,8 @@ _global_script_class_icons={
 [application]
 
 config/name="ghost game"
-run/main_scene="res://world.tscn"
-config/icon="res://icon.png"
+run/main_scene="res://scenes/world.tscn"
+config/icon="res://sprites/icon.png"
 
 [display]
 
