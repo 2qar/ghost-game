@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://world.gd" type="Script" id=1]
 [ext_resource path="res://box.shader" type="Shader" id=2]
@@ -7,6 +7,10 @@
 [ext_resource path="res://ghost_tiles.tres" type="TileSet" id=5]
 [ext_resource path="res://ghost_sprite.tscn" type="PackedScene" id=6]
 [ext_resource path="res://ghost.tscn" type="PackedScene" id=7]
+[ext_resource path="res://font.tres" type="DynamicFont" id=8]
+[ext_resource path="res://ghost.wav" type="AudioStream" id=9]
+[ext_resource path="res://tiles.png" type="Texture" id=10]
+[ext_resource path="res://portal.png" type="Texture" id=11]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
@@ -20,10 +24,95 @@ shader_param/percent = null
 shader = ExtResource( 2 )
 shader_param/percent = 0.0
 
+[sub_resource type="GDScript" id=7]
+script/source = "extends StaticBody2D
+
+func interact(player : Node2D):
+	$sound.play()"
+
+[sub_resource type="RectangleShape2D" id=8]
+extents = Vector2( 4, 4 )
+
+[sub_resource type="GDScript" id=12]
+script/source = "extends StaticBody2D
+
+export(String, MULTILINE) var dialogue
+onready var lines = dialogue.split(\"\\n\")
+var skip : bool = false
+var talking : bool
+var in_conversation : bool
+
+onready var dir = $sprite.flip_h
+
+signal next_line
+
+signal swap_world
+var switch_time : bool
+
+func _ready():
+	add_to_group(\"portal\")
+	$text.visible = false
+
+func _process(delta):
+	if not in_conversation:
+		return
+
+	if not talking and Input.is_action_pressed(\"talk\"):
+		emit_signal(\"next_line\")
+	if talking and Input.is_action_just_pressed(\"skip\"):
+		skip = true
+
+func interact(player : Node2D):
+	if not switch_time:
+		talk(player, lines)
+		switch_time = true
+	else:
+		switch_time = false
+		emit_signal(\"swap_world\", player.WORLD_NAME, player.position, player.get_node(\"sprite\").flip_h)
+
+func talk(player : Node2D, text : PoolStringArray):
+	player.busy = true
+	
+	in_conversation = true
+	skip = false
+	if player.position.x < position.x:
+		$sprite.flip_h = true
+	for line in lines:
+		$text.text = \"\"
+		talking = true
+		for letter in line:
+			$talk_sound.pitch_scale = rand_range(0.4, 1.2)
+			$talk_sound.play()
+			if skip:
+				$text.text = line
+				skip = false
+				break
+			$text.text += letter
+			if letter != \" \":
+				$text_timer.start()
+				yield($text_timer, \"timeout\")
+		talking = false
+		yield(self, \"next_line\")
+
+	$text.text = \"[Z]\"
+	$sprite.flip_h = dir
+	player.busy = false
+	in_conversation = false"
+
+[sub_resource type="RectangleShape2D" id=10]
+extents = Vector2( 4, 4 )
+
+[sub_resource type="AudioStreamRandomPitch" id=11]
+audio_stream = ExtResource( 9 )
+random_pitch = 1.0
+
 [node name="world" type="Control"]
 margin_right = 640.0
 margin_bottom = 480.0
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Tween" type="Tween" parent="."]
 
@@ -64,6 +153,9 @@ tile_data = PoolIntArray( 393223, 13, 0, 393224, 13, 0, 393225, 13, 0, 393226, 4
 material = SubResource( 2 )
 margin_right = 640.0
 margin_bottom = 480.0
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Viewport" type="Viewport" parent="ghost"]
 size = Vector2( 640, 480 )
@@ -90,3 +182,68 @@ tile_data = PoolIntArray( -65537, 10, 0, -131072, 7, 0, -131071, 7, 0, -2, 10, 0
 position = Vector2( 108, 68 )
 dialogue = "hey buddy what's up
 :)"
+
+[node name="bass boy" type="StaticBody2D" parent="ghost/Viewport"]
+editor/display_folded = true
+position = Vector2( 68, 44 )
+script = SubResource( 7 )
+
+[node name="text" type="Label" parent="ghost/Viewport/bass boy"]
+visible = false
+anchor_bottom = 1.0
+margin_left = -41.66
+margin_top = -13.57
+margin_right = 126.34
+margin_bottom = 10.43
+rect_scale = Vector2( 0.5, 0.5 )
+custom_fonts/font = ExtResource( 8 )
+text = "[Z]"
+align = 1
+valign = 1
+
+[node name="collider" type="CollisionShape2D" parent="ghost/Viewport/bass boy"]
+shape = SubResource( 8 )
+
+[node name="sound" type="AudioStreamPlayer2D" parent="ghost/Viewport/bass boy"]
+stream = ExtResource( 9 )
+pitch_scale = 0.32
+
+[node name="Sprite" type="Sprite" parent="ghost/Viewport/bass boy"]
+texture = ExtResource( 10 )
+vframes = 3
+hframes = 5
+frame = 14
+
+[node name="portal" type="StaticBody2D" parent="ghost/Viewport"]
+position = Vector2( 92, 68 )
+script = SubResource( 12 )
+dialogue = "im the portal
+talk to me again
+if u wanna be human
+:)"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ghost/Viewport/portal"]
+shape = SubResource( 10 )
+
+[node name="text" type="Label" parent="ghost/Viewport/portal"]
+anchor_bottom = 1.0
+margin_left = -41.791
+margin_top = -13.7524
+margin_right = 126.209
+margin_bottom = 10.2476
+rect_scale = Vector2( 0.5, 0.5 )
+custom_fonts/font = ExtResource( 8 )
+text = "[Z]"
+align = 1
+valign = 1
+
+[node name="text_timer" type="Timer" parent="ghost/Viewport/portal"]
+wait_time = 0.1
+
+[node name="talk_sound" type="AudioStreamPlayer2D" parent="ghost/Viewport/portal"]
+stream = SubResource( 11 )
+volume_db = -5.361
+bus = "Ghost Talk"
+
+[node name="sprite" type="Sprite" parent="ghost/Viewport/portal"]
+texture = ExtResource( 11 )

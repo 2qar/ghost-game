@@ -8,6 +8,8 @@ func _ready():
 			node.get_node("Viewport/player").connect("swap_world", self, "_on_swap_world")
 			worlds.append(node)
 
+	get_tree().call_group("portal", "connect", "swap_world", self, "_on_swap_world")
+
 func _on_swap_world(world_name: String, pos: Vector2, sprite_flipped: bool):
 	# ugly but it works
 	# 0 hide, 1 show

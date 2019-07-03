@@ -5,8 +5,8 @@ export var CURRENT : bool = false
 export var WORLD_NAME := ""
 
 var movement := Vector2()
-var last_ghost : Object
-var talking : bool
+var last_interactable : Object
+var busy : bool
 
 signal next_line
 signal swap_world
@@ -15,7 +15,7 @@ func _ready():
 	add_to_group("player")
 
 func _process(delta):
-	if not CURRENT:
+	if not CURRENT or busy:
 		return
 
 	if Input.is_action_just_pressed("ui_page_up"):
@@ -23,33 +23,30 @@ func _process(delta):
 
 	var collider = $talk_ray.get_collider()
 	if collider:
-		if last_ghost:
-			if collider.has_method("toggle_text") and collider.name != last_ghost.name:
-				last_ghost.toggle_text()
-				last_ghost = collider
-				last_ghost.toggle_text()
+		if last_interactable:
+			if collider.name != last_interactable.name:
+				last_interactable.get_node("text").visible = false
+				if collider.has_method("interact"):
+					last_interactable = collider
+					last_interactable.get_node("text").visible = true
+				else:
+					last_interactable = null
+					return
 
 			if Input.is_action_just_pressed("talk"):
-				if not talking:
-					talking = true
-					last_ghost.talk()
-				elif not last_ghost.talking:
-					emit_signal("next_line")
-			elif last_ghost.talking and Input.is_action_just_pressed("skip"):
-				last_ghost.skip = true
-		elif collider.has_method("toggle_text"):
-			last_ghost = collider
-			if !collider.text_visible:
-				collider.toggle_text()
-	elif last_ghost:
-		last_ghost.toggle_text()
-		last_ghost = null
+				last_interactable.interact(self)
+		elif collider.has_method("interact"):
+			last_interactable = collider
+			collider.get_node("text").visible = true
+	elif last_interactable:
+		last_interactable.get_node("text").visible = false
+		last_interactable = null
 
 func _physics_process(delta):
 	if not CURRENT:
 		return
 
-	if (Input.is_action_pressed("left") or Input.is_action_pressed("right")) and not talking:
+	if (Input.is_action_pressed("left") or Input.is_action_pressed("right")) and not busy:
 		if Input.is_action_pressed("left"):
 			if !$sprite.flip_h:
 				$sprite.flip_h = true
@@ -63,7 +60,7 @@ func _physics_process(delta):
 	else:
 		movement.x = 0
 	
-	if ($left_down.is_colliding() or $right_down.is_colliding()) and not talking:
+	if ($left_down.is_colliding() or $right_down.is_colliding()) and not busy:
 		if Input.is_action_just_pressed("jump") and movement.y == 0:
 			movement.y = -100
 	if not is_on_floor():
