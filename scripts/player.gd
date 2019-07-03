@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+onready var bow : Sprite = get_node("sprite/bow")
+
 export var SPEED := 30
 export var CURRENT : bool = false
 export var WORLD_NAME := ""
@@ -51,11 +53,17 @@ func _physics_process(delta):
 			if !$sprite.flip_h:
 				$sprite.flip_h = true
 				$talk_ray.cast_to.x *= -1
+			if !bow.flip_h:
+				bow.flip_h = true
+				bow.offset.x *= -1
 			movement.x = -SPEED
 		if Input.is_action_pressed("right"):
 			if $sprite.flip_h:
 				$sprite.flip_h = false
 				$talk_ray.cast_to.x *= -1
+			if bow.flip_h:
+				bow.flip_h = false
+				bow.offset.x *= -1
 			movement.x = SPEED
 	else:
 		movement.x = 0

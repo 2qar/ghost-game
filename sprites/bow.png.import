@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/friendly ghost.png-69af68b7496d8d848f97b3483f0e1b32.stex"
+path="res://.import/bow.png-ad34286c2448e8ca21188eaa3f42d6df.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/friendly ghost.png"
-dest_files=[ "res://.import/friendly ghost.png-69af68b7496d8d848f97b3483f0e1b32.stex" ]
+source_file="res://sprites/bow.png"
+dest_files=[ "res://.import/bow.png-ad34286c2448e8ca21188eaa3f42d6df.stex" ]
 
 [params]
 

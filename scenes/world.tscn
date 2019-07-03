@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://scripts/world.gd" type="Script" id=1]
 [ext_resource path="res://box.shader" type="Shader" id=2]
@@ -6,12 +6,13 @@
 [ext_resource path="res://sprites/human.png" type="Texture" id=4]
 [ext_resource path="res://ghost_tiles.tres" type="TileSet" id=5]
 [ext_resource path="res://scenes/ghost_sprite.tscn" type="PackedScene" id=6]
-[ext_resource path="res://scenes/ghost.tscn" type="PackedScene" id=7]
-[ext_resource path="res://font.tres" type="DynamicFont" id=8]
-[ext_resource path="res://collider.tres" type="Shape2D" id=9]
-[ext_resource path="res://ghost.wav" type="AudioStream" id=10]
-[ext_resource path="res://sprites/tiles.png" type="Texture" id=11]
-[ext_resource path="res://scenes/portal.tscn" type="PackedScene" id=12]
+[ext_resource path="res://sprites/bow.png" type="Texture" id=7]
+[ext_resource path="res://scenes/ghost.tscn" type="PackedScene" id=8]
+[ext_resource path="res://font.tres" type="DynamicFont" id=9]
+[ext_resource path="res://collider.tres" type="Shape2D" id=10]
+[ext_resource path="res://ghost.wav" type="AudioStream" id=11]
+[ext_resource path="res://sprites/tiles.png" type="Texture" id=12]
+[ext_resource path="res://scenes/portal.tscn" type="PackedScene" id=13]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
@@ -96,6 +97,10 @@ position = Vector2( 84, 68 )
 [node name="sprite" parent="ghost/Viewport/player" instance=ExtResource( 6 )]
 material = SubResource( 3 )
 
+[node name="bow" type="Sprite" parent="ghost/Viewport/player/sprite"]
+texture = ExtResource( 7 )
+offset = Vector2( -2, -3 )
+
 [node name="TileMap" type="TileMap" parent="ghost/Viewport"]
 position = Vector2( 64, 64 )
 tile_set = ExtResource( 5 )
@@ -103,7 +108,7 @@ cell_size = Vector2( 8, 8 )
 format = 1
 tile_data = PoolIntArray( -65537, 10, 0, -131072, 7, 0, -131071, 7, 0, -2, 10, 0, -1, 8, 0, 65534, 5, 0, 131070, 9, 0, 131071, 1, 0, 65536, 1, 0, 65537, 1, 0, 65538, 1, 0, 65539, 1, 0, 65540, 1, 0, 65541, 1, 0 )
 
-[node name="ghost" parent="ghost/Viewport" instance=ExtResource( 7 )]
+[node name="ghost" parent="ghost/Viewport" instance=ExtResource( 8 )]
 position = Vector2( 108, 68 )
 dialogue = "hey buddy what's up
 :)"
@@ -121,22 +126,22 @@ margin_top = -13.57
 margin_right = 126.34
 margin_bottom = 10.43
 rect_scale = Vector2( 0.5, 0.5 )
-custom_fonts/font = ExtResource( 8 )
+custom_fonts/font = ExtResource( 9 )
 text = "[Z]"
 align = 1
 valign = 1
 
 [node name="collider" type="CollisionShape2D" parent="ghost/Viewport/bass boy"]
-shape = ExtResource( 9 )
+shape = ExtResource( 10 )
 
 [node name="sound" type="AudioStreamPlayer2D" parent="ghost/Viewport/bass boy"]
-stream = ExtResource( 10 )
+stream = ExtResource( 11 )
 pitch_scale = 0.32
 
 [node name="Sprite" type="Sprite" parent="ghost/Viewport/bass boy"]
-texture = ExtResource( 11 )
+texture = ExtResource( 12 )
 vframes = 3
 hframes = 5
 frame = 14
 
-[node name="portal" parent="ghost/Viewport" instance=ExtResource( 12 )]
+[node name="portal" parent="ghost/Viewport" instance=ExtResource( 13 )]
