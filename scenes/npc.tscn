@@ -1,22 +1,16 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://scripts/portal.gd" type="Script" id=1]
+[ext_resource path="res://scripts/npc.gd" type="Script" id=1]
 [ext_resource path="res://collider.tres" type="Shape2D" id=2]
 [ext_resource path="res://font.tres" type="DynamicFont" id=3]
 [ext_resource path="res://ghost.wav" type="AudioStream" id=4]
-[ext_resource path="res://sprites/portal.png" type="Texture" id=5]
 
 [sub_resource type="AudioStreamRandomPitch" id=1]
 audio_stream = ExtResource( 4 )
 random_pitch = 1.0
 
-[node name="portal" type="StaticBody2D"]
-position = Vector2( 92, 68 )
+[node name="npc" type="StaticBody2D"]
 script = ExtResource( 1 )
-dialogue = "im the portal
-talk to me again
-if u wanna be human
-:)"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = ExtResource( 2 )
@@ -40,6 +34,3 @@ wait_time = 0.1
 stream = SubResource( 1 )
 volume_db = -5.361
 bus = "Ghost Talk"
-
-[node name="sprite" type="Sprite" parent="."]
-texture = ExtResource( 5 )

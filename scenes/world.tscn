@@ -109,6 +109,7 @@ dialogue = "hey buddy what's up
 :)"
 
 [node name="bass boy" type="StaticBody2D" parent="ghost/Viewport"]
+editor/display_folded = true
 position = Vector2( 68, 44 )
 script = SubResource( 4 )
 

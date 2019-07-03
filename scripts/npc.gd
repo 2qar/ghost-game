@@ -17,7 +17,7 @@ func _process(delta):
 	if not in_conversation:
 		return
 
-	if not talking and Input.is_action_pressed("talk"):
+	if not talking and Input.is_action_just_pressed("talk"):
 		emit_signal("next_line")
 	if talking and Input.is_action_just_pressed("skip"):
 		skip = true
@@ -27,7 +27,7 @@ func interact(player : Node2D):
 
 func talk(player : Node2D, text : PoolStringArray):
 	player.busy = true
-	
+
 	in_conversation = true
 	skip = false
 	if player.position.x < position.x:
