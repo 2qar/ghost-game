@@ -10,10 +10,9 @@
 [ext_resource path="res://scripts/bow.gd" type="Script" id=8]
 [ext_resource path="res://scenes/ghost.tscn" type="PackedScene" id=9]
 [ext_resource path="res://font.tres" type="DynamicFont" id=10]
-[ext_resource path="res://collider.tres" type="Shape2D" id=11]
-[ext_resource path="res://ghost.wav" type="AudioStream" id=12]
-[ext_resource path="res://sprites/tiles.png" type="Texture" id=13]
-[ext_resource path="res://scenes/portal.tscn" type="PackedScene" id=14]
+[ext_resource path="res://ghost.wav" type="AudioStream" id=11]
+[ext_resource path="res://sprites/tiles.png" type="Texture" id=12]
+[ext_resource path="res://scenes/portal.tscn" type="PackedScene" id=13]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
@@ -28,10 +27,44 @@ shader = ExtResource( 2 )
 shader_param/percent = 0.0
 
 [sub_resource type="GDScript" id=4]
-script/source = "extends StaticBody2D
+script/source = "extends KinematicBody2D
+
+const MAX_FALL : int = 300
+
+onready var start_pos : Vector2 = position
+onready var move_time : float = $sound.stream.get_length() / $sound.pitch_scale
+var moving : bool
+
+var down_vel : Vector2
 
 func interact(player : Node2D):
-	$sound.play()"
+	if moving:
+		return
+
+	var movement = 8
+	if player.position.x > position.x:
+		movement *= -1
+
+	if test_move(transform, Vector2(movement, 0)):
+		position = start_pos
+		return
+
+	moving = true
+	$sound.play()
+
+	$tween.interpolate_property(self, \"position\", position, position + Vector2(movement, 0), move_time, Tween.TRANS_QUINT, Tween.EASE_OUT)
+	$tween.start()
+	yield($tween, \"tween_all_completed\")
+	moving = false
+
+func _physics_process(delta):
+	if not moving and not test_move(transform, Vector2(0, 0.5)):
+		if down_vel.y < MAX_FALL:
+			down_vel.y += 10
+		down_vel = move_and_slide(down_vel, Vector2(0, -1))"
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 3.9, 3.9 )
 
 [node name="world" type="Control"]
 margin_right = 640.0
@@ -115,8 +148,7 @@ position = Vector2( 108, 68 )
 dialogue = "hey buddy what's up
 :)"
 
-[node name="bass boy" type="StaticBody2D" parent="ghost/Viewport"]
-editor/display_folded = true
+[node name="bass boy" type="KinematicBody2D" parent="ghost/Viewport"]
 position = Vector2( 68, 44 )
 script = SubResource( 4 )
 
@@ -134,16 +166,18 @@ align = 1
 valign = 1
 
 [node name="collider" type="CollisionShape2D" parent="ghost/Viewport/bass boy"]
-shape = ExtResource( 11 )
+shape = SubResource( 5 )
 
 [node name="sound" type="AudioStreamPlayer2D" parent="ghost/Viewport/bass boy"]
-stream = ExtResource( 12 )
+stream = ExtResource( 11 )
 pitch_scale = 0.32
 
 [node name="Sprite" type="Sprite" parent="ghost/Viewport/bass boy"]
-texture = ExtResource( 13 )
+texture = ExtResource( 12 )
 vframes = 3
 hframes = 5
 frame = 14
 
-[node name="portal" parent="ghost/Viewport" instance=ExtResource( 14 )]
+[node name="tween" type="Tween" parent="ghost/Viewport/bass boy"]
+
+[node name="portal" parent="ghost/Viewport" instance=ExtResource( 13 )]
