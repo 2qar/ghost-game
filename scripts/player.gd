@@ -1,7 +1,5 @@
 extends KinematicBody2D
 
-onready var bow : Sprite = get_node("sprite/bow")
-
 export var SPEED := 30
 export var CURRENT : bool = false
 export var WORLD_NAME := ""
@@ -48,25 +46,25 @@ func _physics_process(delta):
 	if not CURRENT:
 		return
 
-	if (Input.is_action_pressed("left") or Input.is_action_pressed("right")) and not busy:
-		if Input.is_action_pressed("left"):
-			if !$sprite.flip_h:
-				$sprite.flip_h = true
-				$talk_ray.cast_to.x *= -1
-			movement.x = -SPEED
-		if Input.is_action_pressed("right"):
-			if $sprite.flip_h:
-				$sprite.flip_h = false
-				$talk_ray.cast_to.x *= -1
-			movement.x = SPEED
-	else:
-		movement.x = 0
-	
-	if ($left_down.is_colliding() or $right_down.is_colliding()) and not busy:
-		if Input.is_action_just_pressed("jump") and movement.y == 0:
+	if movement.y < 250:
+		movement.y += 3
+
+	if not busy:
+		if (Input.is_action_pressed("left") or Input.is_action_pressed("right")):
+			if Input.is_action_pressed("left"):
+				if !$sprite.flip_h:
+					$sprite.flip_h = true
+					$talk_ray.cast_to.x *= -1
+				movement.x = -SPEED
+			if Input.is_action_pressed("right"):
+				if $sprite.flip_h:
+					$sprite.flip_h = false
+					$talk_ray.cast_to.x *= -1
+				movement.x = SPEED
+		else:
+			movement.x = 0
+
+		if is_on_floor() and Input.is_action_just_pressed("jump"):
 			movement.y = -100
-	if not is_on_floor():
-		if movement.y < 250:
-			movement.y += 3
 	
 	movement = move_and_slide(movement, Vector2(0, -1))
