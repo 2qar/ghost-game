@@ -15,6 +15,7 @@ CURRENT = true
 WORLD_NAME = "ghost"
 
 [node name="collider" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 0.2 )
 shape = SubResource( 1 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
