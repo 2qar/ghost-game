@@ -12,6 +12,8 @@ random_pitch = 1.0
 
 [node name="ghost" type="StaticBody2D"]
 script = ExtResource( 1 )
+pitch_low = 0.4
+pitch_high = 1.2
 
 [node name="sprite" parent="." instance=ExtResource( 2 )]
 

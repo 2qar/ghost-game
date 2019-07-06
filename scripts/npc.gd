@@ -1,6 +1,9 @@
 extends StaticBody2D
 
 export(String, MULTILINE) var dialogue
+export(float, 0.0, 32.0) var pitch_low
+export(float, 0.0, 32.0) var pitch_high
+
 onready var lines = dialogue.split("\n")
 var skip : bool = false
 var talking : bool
@@ -36,7 +39,7 @@ func talk(player : Node2D, text : PoolStringArray):
 		$text.text = ""
 		talking = true
 		for letter in line:
-			$talk_sound.pitch_scale = rand_range(0.4, 1.2)
+			$talk_sound.pitch_scale = rand_range(pitch_low, pitch_high)
 			$talk_sound.play()
 			if skip:
 				$text.text = line

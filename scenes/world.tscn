@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://scripts/world.gd" type="Script" id=1]
 [ext_resource path="res://box.shader" type="Shader" id=2]
@@ -9,10 +9,13 @@
 [ext_resource path="res://sprites/bow.png" type="Texture" id=7]
 [ext_resource path="res://scripts/bow.gd" type="Script" id=8]
 [ext_resource path="res://scenes/ghost.tscn" type="PackedScene" id=9]
-[ext_resource path="res://font.tres" type="DynamicFont" id=10]
-[ext_resource path="res://ghost.wav" type="AudioStream" id=11]
-[ext_resource path="res://sprites/tiles.png" type="Texture" id=12]
-[ext_resource path="res://scenes/portal.tscn" type="PackedScene" id=13]
+[ext_resource path="res://scripts/box.gd" type="Script" id=10]
+[ext_resource path="res://font.tres" type="DynamicFont" id=11]
+[ext_resource path="res://ghost.wav" type="AudioStream" id=12]
+[ext_resource path="res://sprites/tiles.png" type="Texture" id=13]
+[ext_resource path="res://scenes/portal.tscn" type="PackedScene" id=14]
+[ext_resource path="res://scripts/npc.gd" type="Script" id=15]
+[ext_resource path="res://sprites/flower.png" type="Texture" id=16]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
@@ -26,45 +29,15 @@ shader_param/percent = null
 shader = ExtResource( 2 )
 shader_param/percent = 0.0
 
-[sub_resource type="GDScript" id=4]
-script/source = "extends KinematicBody2D
-
-const MAX_FALL : int = 300
-
-onready var start_pos : Vector2 = position
-onready var move_time : float = $sound.stream.get_length() / $sound.pitch_scale
-var moving : bool
-
-var down_vel : Vector2
-
-func interact(player : Node2D):
-	if moving:
-		return
-
-	var movement = 8
-	if player.position.x > position.x:
-		movement *= -1
-
-	if test_move(transform, Vector2(movement, 0)):
-		position = start_pos
-		return
-
-	moving = true
-	$sound.play()
-
-	$tween.interpolate_property(self, \"position\", position, position + Vector2(movement, 0), move_time, Tween.TRANS_QUINT, Tween.EASE_OUT)
-	$tween.start()
-	yield($tween, \"tween_all_completed\")
-	moving = false
-
-func _physics_process(delta):
-	if not moving and not test_move(transform, Vector2(0, 0.5)):
-		if down_vel.y < MAX_FALL:
-			down_vel.y += 10
-		down_vel = move_and_slide(down_vel, Vector2(0, -1))"
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 3.9, 3.9 )
 
 [sub_resource type="RectangleShape2D" id=5]
-extents = Vector2( 3.9, 3.9 )
+extents = Vector2( 4, 4 )
+
+[sub_resource type="AudioStreamRandomPitch" id=6]
+audio_stream = ExtResource( 12 )
+random_pitch = 1.0
 
 [node name="world" type="Control"]
 margin_right = 640.0
@@ -141,7 +114,7 @@ position = Vector2( 64, 64 )
 tile_set = ExtResource( 5 )
 cell_size = Vector2( 8, 8 )
 format = 1
-tile_data = PoolIntArray( -65537, 10, 0, -131072, 7, 0, -131071, 7, 0, -2, 10, 0, -1, 8, 0, 65534, 5, 0, 131070, 9, 0, 131071, 1, 0, 65536, 1, 0, 65537, 1, 0, 65538, 1, 0, 65539, 1, 0, 65540, 1, 0, 65541, 1, 0 )
+tile_data = PoolIntArray( -65537, 10, 0, -131072, 7, 0, -131071, 7, 0, -2, 10, 0, -1, 8, 0, 65534, 5, 0, 131070, 9, 0, 131071, 1, 0, 65536, 1, 0, 65537, 1, 0, 65538, 1, 0, 65539, 1, 0, 65540, 1, 0, 65541, 1, 0, 65542, 1, 0, 65543, 1, 0, 65544, 1, 0, 65545, 1, 0, 65546, 1, 0 )
 
 [node name="ghost" parent="ghost/Viewport" instance=ExtResource( 9 )]
 position = Vector2( 108, 68 )
@@ -150,7 +123,7 @@ dialogue = "hey buddy what's up
 
 [node name="bass boy" type="KinematicBody2D" parent="ghost/Viewport"]
 position = Vector2( 68, 44 )
-script = SubResource( 4 )
+script = ExtResource( 10 )
 
 [node name="text" type="Label" parent="ghost/Viewport/bass boy"]
 visible = false
@@ -160,24 +133,60 @@ margin_top = -13.57
 margin_right = 126.34
 margin_bottom = 10.43
 rect_scale = Vector2( 0.5, 0.5 )
-custom_fonts/font = ExtResource( 10 )
+custom_fonts/font = ExtResource( 11 )
 text = "[Z]"
 align = 1
 valign = 1
 
 [node name="collider" type="CollisionShape2D" parent="ghost/Viewport/bass boy"]
-shape = SubResource( 5 )
+shape = SubResource( 4 )
 
 [node name="sound" type="AudioStreamPlayer2D" parent="ghost/Viewport/bass boy"]
-stream = ExtResource( 11 )
+stream = ExtResource( 12 )
 pitch_scale = 0.32
 
 [node name="Sprite" type="Sprite" parent="ghost/Viewport/bass boy"]
-texture = ExtResource( 12 )
+texture = ExtResource( 13 )
 vframes = 3
 hframes = 5
 frame = 14
 
 [node name="tween" type="Tween" parent="ghost/Viewport/bass boy"]
 
-[node name="portal" parent="ghost/Viewport" instance=ExtResource( 13 )]
+[node name="portal" parent="ghost/Viewport" instance=ExtResource( 14 )]
+
+[node name="flower" type="StaticBody2D" parent="ghost/Viewport"]
+position = Vector2( 140, 68 )
+script = ExtResource( 15 )
+dialogue = "hey jerk
+i know what you did
+>:("
+pitch_low = 1.0
+pitch_high = 1.6
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ghost/Viewport/flower"]
+shape = SubResource( 5 )
+
+[node name="text" type="Label" parent="ghost/Viewport/flower"]
+anchor_bottom = 1.0
+margin_left = -41.791
+margin_top = -13.7524
+margin_right = 126.209
+margin_bottom = 10.2476
+rect_scale = Vector2( 0.5, 0.5 )
+custom_fonts/font = ExtResource( 11 )
+text = "[Z]"
+align = 1
+valign = 1
+
+[node name="text_timer" type="Timer" parent="ghost/Viewport/flower"]
+wait_time = 0.1
+
+[node name="talk_sound" type="AudioStreamPlayer2D" parent="ghost/Viewport/flower"]
+stream = SubResource( 6 )
+volume_db = -5.361
+bus = "Ghost Talk"
+
+[node name="sprite" type="Sprite" parent="ghost/Viewport/flower"]
+texture = ExtResource( 16 )
+offset = Vector2( 1, 3 )

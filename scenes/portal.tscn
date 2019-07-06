@@ -17,6 +17,8 @@ dialogue = "im the portal
 talk to me again
 if u wanna be human
 :)"
+pitch_low = 0.3
+pitch_high = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = ExtResource( 2 )
