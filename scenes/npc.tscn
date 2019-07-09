@@ -5,7 +5,7 @@
 [ext_resource path="res://font.tres" type="DynamicFont" id=3]
 [ext_resource path="res://ghost.wav" type="AudioStream" id=4]
 
-[sub_resource type="AudioStreamRandomPitch" id=6]
+[sub_resource type="AudioStreamRandomPitch" id=1]
 audio_stream = ExtResource( 4 )
 random_pitch = 1.0
 
@@ -33,6 +33,6 @@ valign = 1
 wait_time = 0.1
 
 [node name="talk_sound" type="AudioStreamPlayer2D" parent="."]
-stream = SubResource( 6 )
+stream = SubResource( 1 )
 volume_db = -5.361
 bus = "Ghost Talk"
