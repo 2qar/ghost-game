@@ -5,7 +5,7 @@ var worlds = []
 func _ready():
 	for node in get_children():
 		if node.has_method("is_stretch_enabled"):
-			node.get_node("Viewport/player").connect("swap_world", self, "_on_swap_world")
+			node.get_player().connect("swap_world", self, "_on_swap_world")
 			worlds.append(node)
 
 	get_tree().call_group("portal", "connect", "swap_world", self, "_on_swap_world")
@@ -19,7 +19,7 @@ func _on_swap_world(world_name: String, pos: Vector2, sprite_flipped: bool):
 			curr_worlds[0] = world
 		else:
 			curr_worlds[1] = world
-		var player : KinematicBody2D = world.get_node("Viewport/player")
+		var player : KinematicBody2D = world.get_player()
 		player.CURRENT = false
 		player.position = pos
 		var sprite = player.get_node("sprite")
@@ -42,6 +42,6 @@ func _on_swap_world(world_name: String, pos: Vector2, sprite_flipped: bool):
 	
 	curr_worlds[0].visible = false
 	move_child(curr_worlds[0], 1)
-	var curr_player = curr_worlds[1].get_node("Viewport/player")
+	var curr_player = curr_worlds[1].get_player()
 	curr_player.CURRENT = true
 	curr_player.get_node("Camera2D").smoothing_enabled = true

@@ -1,21 +1,10 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scripts/world.gd" type="Script" id=1]
 [ext_resource path="res://box.shader" type="Shader" id=2]
-[ext_resource path="res://scenes/player.tscn" type="PackedScene" id=3]
-[ext_resource path="res://sprites/human.png" type="Texture" id=4]
-[ext_resource path="res://ghost_tiles.tres" type="TileSet" id=5]
-[ext_resource path="res://scripts/flower.gd" type="Script" id=6]
-[ext_resource path="res://collider.tres" type="Shape2D" id=7]
-[ext_resource path="res://font.tres" type="DynamicFont" id=8]
-[ext_resource path="res://sprites/flower.png" type="Texture" id=9]
-[ext_resource path="res://scenes/box.tscn" type="PackedScene" id=10]
-[ext_resource path="res://scenes/portal.tscn" type="PackedScene" id=11]
-[ext_resource path="res://scenes/ghost_sprite.tscn" type="PackedScene" id=12]
-[ext_resource path="res://sprites/bow.png" type="Texture" id=13]
-[ext_resource path="res://scripts/bow.gd" type="Script" id=14]
-[ext_resource path="res://scenes/ghost.tscn" type="PackedScene" id=15]
-[ext_resource path="res://scenes/npc.tscn" type="PackedScene" id=16]
+[ext_resource path="res://scripts/level.gd" type="Script" id=3]
+[ext_resource path="res://scenes/levels/flower/human.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scenes/levels/flower/ghost.tscn" type="PackedScene" id=5]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
@@ -24,33 +13,6 @@ shader_param/percent = null
 [sub_resource type="ShaderMaterial" id=2]
 shader = ExtResource( 2 )
 shader_param/percent = null
-
-[sub_resource type="ShaderMaterial" id=3]
-shader = ExtResource( 2 )
-shader_param/percent = 0.0
-
-[sub_resource type="GDScript" id=4]
-script/source = "extends \"res://scripts/npc.gd\"
-
-func _ready():
-	visible = false
-	$CollisionShape2D.disabled = true
-	get_tree().call_group(\"flower\", \"connect\", \"flower_death\", self, \"_on_flower_death\")
-
-func _on_flower_death():
-	visible = true
-	$CollisionShape2D.disabled = false"
-
-[sub_resource type="GDScript" id=5]
-script/source = "extends \"res://scripts/npc.gd\"
-
-export(String, MULTILINE) var flower_dialogue
-
-func _ready():
-	get_tree().call_group(\"flower\", \"connect\", \"flower_death\", self, \"_on_flower_death\")
-
-func _on_flower_death():
-	lines = flower_dialogue.split(\"\\n\")"
 
 [node name="world" type="Control"]
 margin_right = 640.0
@@ -67,6 +29,7 @@ visible = false
 material = SubResource( 1 )
 margin_right = 640.0
 margin_bottom = 480.0
+script = ExtResource( 3 )
 __meta__ = {
 "_edit_lock_": true
 }
@@ -80,71 +43,13 @@ debug_draw = 3
 render_target_update_mode = 0
 audio_listener_enable_2d = true
 
-[node name="player" parent="human/Viewport" instance=ExtResource( 3 )]
-position = Vector2( 84, 68 )
-CURRENT = false
-WORLD_NAME = "human"
-
-[node name="sprite" type="Sprite" parent="human/Viewport/player"]
-texture = ExtResource( 4 )
-
-[node name="TileMap" type="TileMap" parent="human/Viewport"]
-modulate = Color( 0.294118, 0.0784314, 0.0784314, 1 )
-tile_set = ExtResource( 5 )
-cell_size = Vector2( 8, 8 )
-format = 1
-tile_data = PoolIntArray( 327693, 0, 0, 327694, 1, 0, 327695, 2, 0, 393223, 13, 0, 393224, 13, 0, 393225, 13, 0, 393229, 6, 0, 393230, 7, 0, 393231, 8, 0, 458758, 13, 0, 458759, 13, 0, 524294, 13, 0, 589830, 13, 0, 589831, 13, 0, 589832, 13, 0, 589833, 13, 0, 589834, 13, 0, 589835, 13, 0, 589836, 13, 0, 589837, 13, 0, 589838, 1, 0, 589839, 1, 0, 589840, 1, 0, 589841, 1, 0 )
-
-[node name="flower" type="StaticBody2D" parent="human/Viewport"]
-editor/display_folded = true
-position = Vector2( 132, 68 )
-script = ExtResource( 6 )
-dialogue = "(it's a flower)"
-
-[node name="collider" type="CollisionShape2D" parent="human/Viewport/flower"]
-shape = ExtResource( 7 )
-
-[node name="text" type="Label" parent="human/Viewport/flower"]
-anchor_bottom = 1.0
-margin_left = -41.791
-margin_top = -13.7524
-margin_right = 126.209
-margin_bottom = 10.2476
-rect_scale = Vector2( 0.5, 0.5 )
-custom_fonts/font = ExtResource( 8 )
-text = "[Z]"
-align = 1
-valign = 1
-
-[node name="text_timer" type="Timer" parent="human/Viewport/flower"]
-wait_time = 0.1
-
-[node name="talk_sound" type="AudioStreamPlayer2D" parent="human/Viewport/flower"]
-volume_db = -5.361
-bus = "Ghost Talk"
-
-[node name="sprite" type="Sprite" parent="human/Viewport/flower"]
-texture = ExtResource( 9 )
-offset = Vector2( 1, 3 )
-
-[node name="die" type="Area2D" parent="human/Viewport/flower"]
-editor/display_folded = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="human/Viewport/flower/die"]
-position = Vector2( 0, -8 )
-shape = ExtResource( 7 )
-
-[node name="box" parent="human/Viewport" instance=ExtResource( 10 )]
-position = Vector2( 116, 36 )
-
-[node name="portal" parent="human/Viewport" instance=ExtResource( 11 )]
-position = Vector2( 68, 44 )
-dialogue = "teleport time"
+[node name="human" parent="human/Viewport" instance=ExtResource( 4 )]
 
 [node name="ghost" type="ViewportContainer" parent="."]
 material = SubResource( 2 )
 margin_right = 640.0
 margin_bottom = 480.0
+script = ExtResource( 3 )
 __meta__ = {
 "_edit_lock_": true
 }
@@ -157,53 +62,4 @@ debug_draw = 3
 render_target_update_mode = 3
 audio_listener_enable_2d = true
 
-[node name="player" parent="ghost/Viewport" instance=ExtResource( 3 )]
-position = Vector2( 84, 68 )
-
-[node name="sprite" parent="ghost/Viewport/player" instance=ExtResource( 12 )]
-material = SubResource( 3 )
-
-[node name="bow" type="Sprite" parent="ghost/Viewport/player/sprite"]
-texture = ExtResource( 13 )
-offset = Vector2( -2, -3 )
-script = ExtResource( 14 )
-
-[node name="TileMap" type="TileMap" parent="ghost/Viewport"]
-position = Vector2( 64, 64 )
-tile_set = ExtResource( 5 )
-cell_size = Vector2( 8, 8 )
-format = 1
-tile_data = PoolIntArray( -65537, 10, 0, -131072, 7, 0, -131071, 7, 0, -2, 10, 0, -1, 8, 0, 65534, 5, 0, 131070, 9, 0, 131071, 1, 0, 65536, 1, 0, 65537, 1, 0, 65538, 1, 0, 65539, 1, 0, 65540, 1, 0, 65541, 1, 0, 65542, 1, 0, 65543, 1, 0, 65544, 1, 0, 65545, 1, 0, 65546, 1, 0 )
-
-[node name="ghost" parent="ghost/Viewport" instance=ExtResource( 15 )]
-position = Vector2( 108, 68 )
-dialogue = "hey buddy what's up
-:)"
-
-[node name="box" parent="ghost/Viewport" instance=ExtResource( 10 )]
-
-[node name="portal" parent="ghost/Viewport" instance=ExtResource( 11 )]
-
-[node name="flower" parent="ghost/Viewport" instance=ExtResource( 16 )]
-editor/display_folded = true
-position = Vector2( 132, 68 )
-script = SubResource( 4 )
-dialogue = "hey jerk
-i know what you did
->:("
-pitch_low = 1.0
-pitch_high = 1.6
-
-[node name="sprite" type="Sprite" parent="ghost/Viewport/flower"]
-position = Vector2( 1, 3 )
-texture = ExtResource( 9 )
-
-[node name="flower_boy" parent="ghost/Viewport" instance=ExtResource( 15 )]
-position = Vector2( 148, 68 )
-script = SubResource( 5 )
-dialogue = "man
-i wish i had a flower"
-flower_dialogue = "man
-i have a flower now
-:)"
-[connection signal="body_entered" from="human/Viewport/flower/die" to="human/Viewport/flower" method="_on_die_body_entered"]
+[node name="ghost" parent="ghost/Viewport" instance=ExtResource( 5 )]
