@@ -15,6 +15,7 @@
 [node name="player" parent="." instance=ExtResource( 1 )]
 editor/display_folded = true
 position = Vector2( 12, 4 )
+CURRENT = false
 WORLD_NAME = "human"
 
 [node name="sprite" type="Sprite" parent="player"]
