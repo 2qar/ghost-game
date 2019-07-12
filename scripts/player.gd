@@ -4,7 +4,11 @@ export var SPEED := 30
 export var CURRENT : bool = false
 export var WORLD_NAME := ""
 
+export (int) var jump_strength = 50
+
 var movement := Vector2()
+var jumping : bool
+var jump_timeout : bool
 var last_interactable : Object
 var busy : bool
 
@@ -65,6 +69,17 @@ func _physics_process(delta):
 			movement.x = 0
 
 		if is_on_floor() and Input.is_action_just_pressed("jump"):
-			movement.y = -100
+			movement.y = -jump_strength
+			jumping = true
+			jump_timeout = false
+			$jump_timer.start()
+
+		if Input.is_action_pressed("jump") and jumping and not jump_timeout:
+			movement.y = -jump_strength
+		if Input.is_action_just_released("jump"):
+			jumping = false
 	
 	movement = move_and_slide(movement, Vector2(0, -1))
+
+func _on_jump_timer_timeout():
+	jump_timeout = true

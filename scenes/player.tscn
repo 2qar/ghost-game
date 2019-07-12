@@ -28,3 +28,8 @@ smoothing_enabled = true
 [node name="talk_ray" type="RayCast2D" parent="."]
 enabled = true
 cast_to = Vector2( 16, 0 )
+
+[node name="jump_timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+[connection signal="timeout" from="jump_timer" to="." method="_on_jump_timer_timeout"]
