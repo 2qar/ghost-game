@@ -27,7 +27,10 @@ func _on_swap_world(world_name: String, pos: Vector2, sprite_flipped: bool):
 			player.get_node("talk_ray").cast_to.x *= -1
 			sprite.flip_h = sprite_flipped
 		player.get_node("sprite").flip_h = sprite_flipped
-		player.get_node("Camera2D").smoothing_enabled = false
+		var camera : Camera2D = player.get_node("Camera2D")
+		camera.smoothing_enabled = false
+		camera.align()
+		camera.smoothing_enabled = true
 
 	print("hide ", curr_worlds[0].name)
 	get_tree().call_group("player", "set_position", pos)
@@ -44,4 +47,3 @@ func _on_swap_world(world_name: String, pos: Vector2, sprite_flipped: bool):
 	move_child(curr_worlds[0], 1)
 	var curr_player = curr_worlds[1].get_player()
 	curr_player.CURRENT = true
-	curr_player.get_node("Camera2D").smoothing_enabled = true
