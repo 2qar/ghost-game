@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://scenes/player/human.tscn" type="PackedScene" id=1]
 [ext_resource path="res://ghost_tiles.tres" type="TileSet" id=2]
@@ -8,6 +8,10 @@
 [ext_resource path="res://sprites/flower.png" type="Texture" id=6]
 [ext_resource path="res://scenes/box.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/portal.tscn" type="PackedScene" id=8]
+[ext_resource path="res://sprites/spike.png" type="Texture" id=9]
+
+[sub_resource type="ConvexPolygonShape2D" id=1]
+points = PoolVector2Array( -4, 4, 4, 4, 0, -4 )
 
 [node name="human" type="Node2D"]
 
@@ -68,4 +72,18 @@ position = Vector2( 52, -28 )
 [node name="portal" parent="." instance=ExtResource( 8 )]
 position = Vector2( 4, -20 )
 dialogue = "teleport time"
+
+[node name="spike" type="StaticBody2D" parent="."]
+position = Vector2( 28, 4 )
+collision_layer = 2
+collision_mask = 2
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="spike"]
+texture = ExtResource( 9 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="spike"]
+shape = SubResource( 1 )
 [connection signal="body_entered" from="flower/die" to="flower" method="_on_die_body_entered"]
