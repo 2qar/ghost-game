@@ -78,6 +78,8 @@ func _physics_process(delta):
 			movement.y -= jump_strength * ($jump_timer.time_left / $jump_timer.wait_time) * delta + 2
 		if Input.is_action_just_released("jump"):
 			jumping = false
+	else:
+		movement.x = 0
 	
 	movement = move_and_slide(movement, Vector2(0, -1))
 
