@@ -1,0 +1,57 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://scripts/player.gd" type="Script" id=1]
+[ext_resource path="res://scenes/ghost_sprite.tscn" type="PackedScene" id=2]
+[ext_resource path="res://box.shader" type="Shader" id=3]
+[ext_resource path="res://sprites/ghost.png" type="Texture" id=4]
+[ext_resource path="res://scripts/animated_sprite.gd" type="Script" id=5]
+[ext_resource path="res://sprites/bow.png" type="Texture" id=6]
+[ext_resource path="res://scripts/bow.gd" type="Script" id=7]
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 3.8, 3.8 )
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 3 )
+shader_param/percent = 0.0
+
+[node name="player" type="KinematicBody2D"]
+position = Vector2( 12, 4 )
+collision/safe_margin = 0.04
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+CURRENT = true
+WORLD_NAME = "ghost"
+
+[node name="collider" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 0.2 )
+shape = SubResource( 2 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+zoom = Vector2( 0.2, 0.2 )
+drag_margin_h_enabled = false
+drag_margin_v_enabled = false
+smoothing_enabled = true
+
+[node name="talk_ray" type="RayCast2D" parent="."]
+enabled = true
+cast_to = Vector2( 16, 0 )
+
+[node name="jump_timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="sprite" type="Sprite" parent="." instance=ExtResource( 2 )]
+material = SubResource( 1 )
+texture = ExtResource( 4 )
+hframes = 6
+script = ExtResource( 5 )
+
+[node name="bow" type="Sprite" parent="sprite"]
+texture = ExtResource( 6 )
+offset = Vector2( -2, -3 )
+script = ExtResource( 7 )
+[connection signal="timeout" from="jump_timer" to="." method="_on_jump_timer_timeout"]
