@@ -1,5 +1,6 @@
 extends Control
 
+export(String, "human", "ghost") var start_world
 var worlds = []
 
 func _ready():
@@ -7,6 +8,12 @@ func _ready():
 		if node.has_method("is_stretch_enabled"):
 			node.get_player().connect("swap_world", self, "_on_swap_world")
 			worlds.append(node)
+
+			var is_start_world = node.name == start_world
+			node.get_player().CURRENT = is_start_world
+			node.visible = is_start_world
+			if is_start_world:
+				move_child(node, 2)
 
 	get_tree().call_group("portal", "connect", "swap_world", self, "_on_swap_world")
 
