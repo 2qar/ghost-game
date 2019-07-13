@@ -75,7 +75,7 @@ func _physics_process(delta):
 			$jump_timer.start()
 
 		if Input.is_action_pressed("jump") and jumping and not jump_timeout:
-			movement.y = -jump_strength
+			movement.y -= jump_strength * ($jump_timer.time_left / $jump_timer.wait_time) * delta + 2
 		if Input.is_action_just_released("jump"):
 			jumping = false
 	
