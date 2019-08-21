@@ -8,7 +8,7 @@
 [ext_resource path="res://scenes/npc.tscn" type="PackedScene" id=6]
 [ext_resource path="res://sprites/flower.png" type="Texture" id=7]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=1]
 script/source = "extends \"res://scripts/npc.gd\"
 
 func _ready():
@@ -20,7 +20,7 @@ func _on_flower_death():
 	visible = true
 	$CollisionShape2D.disabled = false"
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=2]
 script/source = "extends \"res://scripts/npc.gd\"
 
 export(String, MULTILINE) var flower_dialogue
@@ -55,7 +55,7 @@ position = Vector2( 28, 4 )
 [node name="flower" parent="." instance=ExtResource( 6 )]
 editor/display_folded = true
 position = Vector2( 68, 4 )
-script = SubResource( 2 )
+script = SubResource( 1 )
 dialogue = "hey jerk
 i know what you did
 >:("
@@ -68,7 +68,7 @@ texture = ExtResource( 7 )
 
 [node name="flower_boy" parent="." instance=ExtResource( 3 )]
 position = Vector2( 84, 4 )
-script = SubResource( 3 )
+script = SubResource( 2 )
 dialogue = "man
 i wish i had a flower"
 flower_dialogue = "man
