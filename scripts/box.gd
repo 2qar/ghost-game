@@ -9,6 +9,12 @@ var falling : bool
 
 var down_vel : Vector2
 
+func in_range():
+	$text.visible = !moving and !falling
+
+func exit_range():
+	$text.visible = false
+
 func interact(player : Node2D):
 	if moving or falling:
 		return

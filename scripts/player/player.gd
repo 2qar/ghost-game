@@ -29,21 +29,28 @@ func _process(delta):
 	if collider:
 		if last_interactable:
 			if collider.name != last_interactable.name:
-				last_interactable.get_node("text").visible = false
+				if last_interactable.has_method("exit_range"):
+					last_interactable.exit_range()
 				if collider.has_method("interact"):
+					if collider.has_method("enter_range"):
+						collider.enter_range()
 					last_interactable = collider
-					last_interactable.get_node("text").visible = true
 				else:
 					last_interactable = null
 					return
 
+			if last_interactable.has_method("in_range"):
+				last_interactable.in_range()
+
 			if Input.is_action_just_pressed("talk"):
 				last_interactable.interact(self)
 		elif collider.has_method("interact"):
+			if collider.has_method("enter_range"):
+				collider.enter_range()
 			last_interactable = collider
-			collider.get_node("text").visible = true
 	elif last_interactable:
-		last_interactable.get_node("text").visible = false
+		if last_interactable.has_method("exit_range"):
+			last_interactable.exit_range()
 		last_interactable = null
 
 func _physics_process(delta):

@@ -25,6 +25,12 @@ func _process(delta):
 	if talking and Input.is_action_just_pressed("skip"):
 		skip = true
 
+func enter_range():
+	$text.visible = true
+
+func exit_range():
+	$text.visible = false
+
 func interact(player : Node2D):
 	talk(player, lines)
 
