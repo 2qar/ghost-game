@@ -4,6 +4,7 @@ const MAX_FALL : int = 2
 
 onready var start_pos : Vector2 = position
 onready var move_time : float = $sound.stream.get_length() / $sound.pitch_scale
+onready var fall_x : int = position.x
 var moving : bool
 var falling : bool
 
@@ -35,6 +36,7 @@ func interact(player : Node2D):
 	$tween.start()
 	yield($tween, "tween_all_completed")
 	moving = false
+	fall_x = position.x
 
 func _physics_process(delta):
 	if not moving and not test_move(transform, Vector2(0, 0.1)):
@@ -42,6 +44,7 @@ func _physics_process(delta):
 		if down_vel.y < MAX_FALL:
 			down_vel.y += 0.3
 		var collision = move_and_collide(down_vel)
+		position.x = fall_x
 		if collision:
 			falling = false
 			print(collision.collider.name)
