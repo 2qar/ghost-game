@@ -36,6 +36,8 @@ smoothing_enabled = true
 [node name="talk_ray" type="RayCast2D" parent="."]
 enabled = true
 cast_to = Vector2( 16, 0 )
+collision_mask = 2
+collide_with_areas = true
 
 [node name="jump_timer" type="Timer" parent="."]
 wait_time = 0.5

@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://collider.tres" type="Shape2D" id=1]
+
+[node name="interact_area" type="Area2D"]
+collision_layer = 2
+collision_mask = 2
+
+[node name="collider" type="CollisionShape2D" parent="."]
+shape = ExtResource( 1 )

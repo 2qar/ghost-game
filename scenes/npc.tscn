@@ -1,12 +1,13 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scripts/npc.gd" type="Script" id=1]
 [ext_resource path="res://collider.tres" type="Shape2D" id=2]
-[ext_resource path="res://font.tres" type="DynamicFont" id=3]
-[ext_resource path="res://ghost.wav" type="AudioStream" id=4]
+[ext_resource path="res://scenes/interact_area.tscn" type="PackedScene" id=3]
+[ext_resource path="res://font.tres" type="DynamicFont" id=4]
+[ext_resource path="res://ghost.wav" type="AudioStream" id=5]
 
 [sub_resource type="AudioStreamRandomPitch" id=1]
-audio_stream = ExtResource( 4 )
+audio_stream = ExtResource( 5 )
 random_pitch = 1.0
 
 [node name="npc" type="StaticBody2D"]
@@ -17,6 +18,8 @@ pitch_high = 1.2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = ExtResource( 2 )
 
+[node name="interact_area" parent="." instance=ExtResource( 3 )]
+
 [node name="text" type="Label" parent="."]
 anchor_bottom = 1.0
 margin_left = -41.791
@@ -24,7 +27,7 @@ margin_top = -13.7524
 margin_right = 126.209
 margin_bottom = 10.2476
 rect_scale = Vector2( 0.5, 0.5 )
-custom_fonts/font = ExtResource( 3 )
+custom_fonts/font = ExtResource( 4 )
 text = "[Z]"
 align = 1
 valign = 1

@@ -25,16 +25,17 @@ func _process(delta):
 	if Input.is_action_just_pressed("ui_page_up"):
 		emit_signal("swap_world", WORLD_NAME, position, $sprite.flip_h)
 
-	var collider = $talk_ray.get_collider()
-	if collider:
+	var interactable = $talk_ray.get_collider()
+	if interactable:
+		interactable = interactable.get_parent()
 		if last_interactable:
-			if collider.name != last_interactable.name:
+			if interactable.name != last_interactable.name:
 				if last_interactable.has_method("exit_range"):
 					last_interactable.exit_range()
-				if collider.has_method("interact"):
-					if collider.has_method("enter_range"):
-						collider.enter_range()
-					last_interactable = collider
+				if interactable.has_method("interact"):
+					if interactable.has_method("enter_range"):
+						interactable.enter_range()
+					last_interactable = interactable
 				else:
 					last_interactable = null
 					return
@@ -44,10 +45,10 @@ func _process(delta):
 
 			if Input.is_action_just_pressed("talk"):
 				last_interactable.interact(self)
-		elif collider.has_method("interact"):
-			if collider.has_method("enter_range"):
-				collider.enter_range()
-			last_interactable = collider
+		elif interactable.has_method("interact"):
+			if interactable.has_method("enter_range"):
+				interactable.enter_range()
+			last_interactable = interactable
 	elif last_interactable:
 		if last_interactable.has_method("exit_range"):
 			last_interactable.exit_range()
