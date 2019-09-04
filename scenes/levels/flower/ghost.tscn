@@ -14,9 +14,11 @@ script/source = "extends \"res://scripts/npc.gd\"
 func _ready():
 	visible = false
 	$CollisionShape2D.disabled = true
+	$interact_area/collider.disabled = true
 	get_tree().call_group(\"flower\", \"connect\", \"flower_death\", self, \"_on_flower_death\")
 
 func _on_flower_death():
+	$interact_area/collider.disabled = false
 	visible = true"
 
 [sub_resource type="GDScript" id=2]
