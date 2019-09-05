@@ -13,4 +13,4 @@ func interact(player : Node2D):
 		switch_time = true
 	else:
 		switch_time = false
-		emit_signal("swap_world", player.WORLD_NAME, player.position, player.get_node("sprite").flip_h)
+		emit_signal("swap_world")

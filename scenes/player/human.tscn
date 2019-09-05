@@ -14,7 +14,6 @@ __meta__ = {
 "_edit_group_": true
 }
 SPEED = 40
-CURRENT = true
 WORLD_NAME = "human"
 jump_strength = 60
 

@@ -2,6 +2,14 @@ extends "res://scripts/player/player.gd"
 
 onready var bow_start_offset : int = $bow.offset.x
 
+func set_flipped(flipped : bool):
+	if flipped:
+		$bow.offset.x = -bow_start_offset
+	else:
+		$bow.offset.x = bow_start_offset
+	$bow.flip_h = flipped
+	$sprite.flip_h = flipped
+
 func _process(delta):
 	if not busy:
 		if Input.is_action_pressed("left"):

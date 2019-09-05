@@ -1,7 +1,7 @@
 extends "res://scripts/player/player.gd"
 
-func _physics_process(delta):
-	pass
+func set_flipped(flipped : bool):
+	$sprite.flip_h = flipped
 
 func _on_damage_body_entered(body):
 	if body.name == "spike":

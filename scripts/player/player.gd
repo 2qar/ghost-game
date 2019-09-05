@@ -1,7 +1,6 @@
 extends KinematicBody2D
 
 export var SPEED := 30
-export var CURRENT : bool = false
 export var WORLD_NAME := ""
 
 export (int) var jump_strength = 50
@@ -11,6 +10,7 @@ var jumping : bool
 var jump_timeout : bool
 var last_interactable : Object
 var busy : bool
+var other_player : KinematicBody2D
 
 signal next_line
 signal swap_world
@@ -18,8 +18,19 @@ signal swap_world
 func _ready():
 	add_to_group("player")
 
+func set_flipped(flipped : bool):
+	pass
+
+func mirror_player(player : KinematicBody2D):
+	position = player.position
+	set_flipped(player.get_node("sprite").flip_h)
+	$talk_ray.cast_to = player.get_node("talk_ray").cast_to
+
 func _process(delta):
-	if not CURRENT or busy:
+	if other_player:
+		mirror_player(other_player)
+		return
+	if busy:
 		return
 
 	if Input.is_action_just_pressed("ui_page_up"):
@@ -55,7 +66,7 @@ func _process(delta):
 		last_interactable = null
 
 func _physics_process(delta):
-	if not CURRENT:
+	if other_player:
 		return
 
 	if movement.y < 250:
