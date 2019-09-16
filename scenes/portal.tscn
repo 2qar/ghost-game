@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scripts/portal.gd" type="Script" id=1]
 [ext_resource path="res://collider.tres" type="Shape2D" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://font.tres" type="DynamicFont" id=4]
 [ext_resource path="res://ghost.wav" type="AudioStream" id=5]
 [ext_resource path="res://sprites/portal.png" type="Texture" id=6]
+[ext_resource path="res://sprites/mask.png" type="Texture" id=7]
 
 [sub_resource type="AudioStreamRandomPitch" id=1]
 audio_stream = ExtResource( 5 )
@@ -48,3 +49,10 @@ bus = "Ghost Talk"
 
 [node name="sprite" type="Sprite" parent="."]
 texture = ExtResource( 6 )
+
+[node name="mask" type="Light2D" parent="."]
+texture = ExtResource( 7 )
+texture_scale = 0.13
+mode = 1
+
+[node name="Tween" type="Tween" parent="."]

@@ -1,7 +1,6 @@
 extends KinematicBody2D
 
 export var SPEED := 30
-export var WORLD_NAME := ""
 
 export (int) var jump_strength = 50
 
@@ -32,9 +31,6 @@ func _process(delta):
 		return
 	if busy:
 		return
-
-	if Input.is_action_just_pressed("ui_page_up"):
-		emit_signal("swap_world", WORLD_NAME, position, $sprite.flip_h)
 
 	var interactable = $talk_ray.get_collider()
 	if interactable:
